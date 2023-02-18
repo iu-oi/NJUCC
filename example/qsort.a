@@ -1,0 +1,505 @@
+Program (2)
+ ExtDefList (2)
+  ExtDef (2)
+   TYPE: int
+   FunDec (2)
+    ID: quick_sort
+    LP
+    VarList (2)
+     TYPE: int
+     Dec (2)
+      Dec (2)
+       ID: arr
+      LB
+      INT: 10
+      RB
+     COMMA
+     VarList (2)
+      TYPE: int
+      Dec (2)
+       ID: left
+      COMMA
+      VarList (2)
+       TYPE: int
+       Dec (2)
+        ID: right
+    RP
+   CompSt (2)
+    LC
+    DefList (3)
+     Def (3)
+      TYPE: int
+      DecList (3)
+       Dec (3)
+        ID: i
+       COMMA
+       DecList (3)
+        Dec (3)
+         ID: j
+        COMMA
+        DecList (3)
+         Dec (3)
+          ID: pivot
+      SEMI
+    StmtList (4)
+     Stmt (4)
+      Exp (4)
+       Exp (4)
+        ID: i
+       ASSIGNOP
+       Exp (4)
+        ID: left
+      SEMI
+     StmtList (5)
+      Stmt (5)
+       Exp (5)
+        Exp (5)
+         ID: j
+        ASSIGNOP
+        Exp (5)
+         ID: right
+       SEMI
+      StmtList (6)
+       Stmt (6)
+        Exp (6)
+         Exp (6)
+          ID: pivot
+         ASSIGNOP
+         Exp (6)
+          Exp (6)
+           ID: arr
+          LB
+          Exp (6)
+           ID: left
+          RB
+        SEMI
+       StmtList (7)
+        Stmt (7)
+         IF
+         LP
+         Exp (7)
+          Exp (7)
+           ID: i
+          RELOP: >=
+          Exp (7)
+           ID: j
+         RP
+         Stmt (7)
+          CompSt (7)
+           LC
+           StmtList (8)
+            Stmt (8)
+             RETURN
+             Exp (8)
+              INT: 0
+             SEMI
+           RC
+        StmtList (10)
+         Stmt (10)
+          WHILE
+          LP
+          Exp (10)
+           Exp (10)
+            ID: i
+           RELOP: <
+           Exp (10)
+            ID: j
+          RP
+          Stmt (10)
+           CompSt (10)
+            LC
+            StmtList (11)
+             Stmt (11)
+              WHILE
+              LP
+              Exp (11)
+               Exp (11)
+                Exp (11)
+                 ID: i
+                RELOP: <
+                Exp (11)
+                 ID: j
+               AND
+               Exp (11)
+                Exp (11)
+                 Exp (11)
+                  ID: arr
+                 LB
+                 Exp (11)
+                  ID: j
+                 RB
+                RELOP: >
+                Exp (11)
+                 ID: pivot
+              RP
+              Stmt (11)
+               CompSt (11)
+                LC
+                StmtList (12)
+                 Stmt (12)
+                  Exp (12)
+                   Exp (12)
+                    ID: j
+                   ASSIGNOP
+                   Exp (12)
+                    Exp (12)
+                     ID: j
+                    MINUS
+                    Exp (12)
+                     INT: 1
+                  SEMI
+                RC
+             StmtList (14)
+              Stmt (14)
+               IF
+               LP
+               Exp (14)
+                Exp (14)
+                 ID: i
+                RELOP: <
+                Exp (14)
+                 ID: j
+               RP
+               Stmt (14)
+                CompSt (14)
+                 LC
+                 StmtList (15)
+                  Stmt (15)
+                   Exp (15)
+                    Exp (15)
+                     Exp (15)
+                      ID: arr
+                     LB
+                     Exp (15)
+                      ID: i
+                     RB
+                    ASSIGNOP
+                    Exp (15)
+                     Exp (15)
+                      ID: arr
+                     LB
+                     Exp (15)
+                      ID: j
+                     RB
+                   SEMI
+                  StmtList (16)
+                   Stmt (16)
+                    Exp (16)
+                     Exp (16)
+                      ID: i
+                     ASSIGNOP
+                     Exp (16)
+                      Exp (16)
+                       ID: i
+                      PLUS
+                      Exp (16)
+                       INT: 1
+                    SEMI
+                 RC
+              StmtList (18)
+               Stmt (18)
+                WHILE
+                LP
+                Exp (18)
+                 Exp (18)
+                  Exp (18)
+                   ID: i
+                  RELOP: <
+                  Exp (18)
+                   ID: j
+                 AND
+                 Exp (18)
+                  Exp (18)
+                   Exp (18)
+                    ID: arr
+                   LB
+                   Exp (18)
+                    ID: i
+                   RB
+                  RELOP: <
+                  Exp (18)
+                   ID: pivot
+                RP
+                Stmt (18)
+                 CompSt (18)
+                  LC
+                  StmtList (19)
+                   Stmt (19)
+                    Exp (19)
+                     Exp (19)
+                      ID: i
+                     ASSIGNOP
+                     Exp (19)
+                      Exp (19)
+                       ID: i
+                      PLUS
+                      Exp (19)
+                       INT: 1
+                    SEMI
+                  RC
+               StmtList (21)
+                Stmt (21)
+                 IF
+                 LP
+                 Exp (21)
+                  Exp (21)
+                   ID: i
+                  RELOP: <
+                  Exp (21)
+                   ID: j
+                 RP
+                 Stmt (21)
+                  CompSt (21)
+                   LC
+                   StmtList (22)
+                    Stmt (22)
+                     Exp (22)
+                      Exp (22)
+                       Exp (22)
+                        ID: arr
+                       LB
+                       Exp (22)
+                        ID: j
+                       RB
+                      ASSIGNOP
+                      Exp (22)
+                       Exp (22)
+                        ID: arr
+                       LB
+                       Exp (22)
+                        ID: i
+                       RB
+                     SEMI
+                    StmtList (23)
+                     Stmt (23)
+                      Exp (23)
+                       Exp (23)
+                        ID: j
+                       ASSIGNOP
+                       Exp (23)
+                        Exp (23)
+                         ID: j
+                        MINUS
+                        Exp (23)
+                         INT: 1
+                      SEMI
+                   RC
+            RC
+         StmtList (26)
+          Stmt (26)
+           Exp (26)
+            Exp (26)
+             Exp (26)
+              ID: arr
+             LB
+             Exp (26)
+              ID: i
+             RB
+            ASSIGNOP
+            Exp (26)
+             ID: pivot
+           SEMI
+          StmtList (27)
+           Stmt (27)
+            Exp (27)
+             ID: quick_sort
+             LP
+             Args (27)
+              Exp (27)
+               ID: arr
+              COMMA
+              Args (27)
+               Exp (27)
+                ID: left
+               COMMA
+               Args (27)
+                Exp (27)
+                 Exp (27)
+                  ID: i
+                 MINUS
+                 Exp (27)
+                  INT: 1
+             RP
+            SEMI
+           StmtList (28)
+            Stmt (28)
+             Exp (28)
+              ID: quick_sort
+              LP
+              Args (28)
+               Exp (28)
+                ID: arr
+               COMMA
+               Args (28)
+                Exp (28)
+                 Exp (28)
+                  ID: i
+                 PLUS
+                 Exp (28)
+                  INT: 1
+                COMMA
+                Args (28)
+                 Exp (28)
+                  ID: right
+              RP
+             SEMI
+            StmtList (29)
+             Stmt (29)
+              RETURN
+              Exp (29)
+               INT: 0
+              SEMI
+    RC
+  ExtDefList (32)
+   ExtDef (32)
+    TYPE: int
+    FunDec (32)
+     ID: main
+     LP
+     RP
+    CompSt (32)
+     LC
+     DefList (33)
+      Def (33)
+       TYPE: int
+       DecList (33)
+        Dec (33)
+         ID: cnt
+        COMMA
+        DecList (33)
+         Dec (33)
+          Dec (33)
+           ID: a
+          LB
+          INT: 10
+          RB
+       SEMI
+     StmtList (34)
+      Stmt (34)
+       Exp (34)
+        Exp (34)
+         ID: cnt
+        ASSIGNOP
+        Exp (34)
+         INT: 0
+       SEMI
+      StmtList (35)
+       Stmt (35)
+        WHILE
+        LP
+        Exp (35)
+         Exp (35)
+          ID: cnt
+         RELOP: <
+         Exp (35)
+          INT: 10
+        RP
+        Stmt (35)
+         CompSt (35)
+          LC
+          StmtList (36)
+           Stmt (36)
+            Exp (36)
+             Exp (36)
+              Exp (36)
+               ID: a
+              LB
+              Exp (36)
+               ID: cnt
+              RB
+             ASSIGNOP
+             Exp (36)
+              READ
+              LP
+              RP
+            SEMI
+           StmtList (37)
+            Stmt (37)
+             Exp (37)
+              Exp (37)
+               ID: cnt
+              ASSIGNOP
+              Exp (37)
+               Exp (37)
+                ID: cnt
+               PLUS
+               Exp (37)
+                INT: 1
+             SEMI
+          RC
+       StmtList (39)
+        Stmt (39)
+         Exp (39)
+          ID: quick_sort
+          LP
+          Args (39)
+           Exp (39)
+            ID: a
+           COMMA
+           Args (39)
+            Exp (39)
+             INT: 0
+            COMMA
+            Args (39)
+             Exp (39)
+              INT: 9
+          RP
+         SEMI
+        StmtList (40)
+         Stmt (40)
+          Exp (40)
+           Exp (40)
+            ID: cnt
+           ASSIGNOP
+           Exp (40)
+            INT: 0
+          SEMI
+         StmtList (41)
+          Stmt (41)
+           WHILE
+           LP
+           Exp (41)
+            Exp (41)
+             ID: cnt
+            RELOP: <
+            Exp (41)
+             INT: 10
+           RP
+           Stmt (41)
+            CompSt (41)
+             LC
+             StmtList (42)
+              Stmt (42)
+               Exp (42)
+                WRITE
+                LP
+                Exp (42)
+                 Exp (42)
+                  ID: a
+                 LB
+                 Exp (42)
+                  ID: cnt
+                 RB
+                RP
+               SEMI
+              StmtList (43)
+               Stmt (43)
+                Exp (43)
+                 Exp (43)
+                  ID: cnt
+                 ASSIGNOP
+                 Exp (43)
+                  Exp (43)
+                   ID: cnt
+                  PLUS
+                  Exp (43)
+                   INT: 1
+                SEMI
+             RC
+          StmtList (45)
+           Stmt (45)
+            RETURN
+            Exp (45)
+             INT: 0
+            SEMI
+     RC

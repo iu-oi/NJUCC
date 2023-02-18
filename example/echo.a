@@ -1,0 +1,44 @@
+Program (2)
+ ExtDefList (2)
+  ExtDef (2)
+   TYPE: int
+   FunDec (2)
+    ID: main
+    LP
+    RP
+   CompSt (2)
+    LC
+    DefList (3)
+     Def (3)
+      TYPE: int
+      DecList (3)
+       Dec (3)
+        ID: a
+      SEMI
+    StmtList (4)
+     Stmt (4)
+      Exp (4)
+       Exp (4)
+        ID: a
+       ASSIGNOP
+       Exp (4)
+        READ
+        LP
+        RP
+      SEMI
+     StmtList (5)
+      Stmt (5)
+       Exp (5)
+        WRITE
+        LP
+        Exp (5)
+         ID: a
+        RP
+       SEMI
+      StmtList (6)
+       Stmt (6)
+        RETURN
+        Exp (6)
+         INT: 0
+        SEMI
+    RC
