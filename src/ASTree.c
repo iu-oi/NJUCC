@@ -27,29 +27,12 @@ void ast_reduct(ASTNode *rule, u4 ctr, ...) {
   va_end(prods);
 }
 
-ASTNode *get_ast(ASTNode *par, u4 prodno) {
-  BinaryTreeStub *stub = &par->stub;
-
-  switch (prodno) {
-  case 4:
-    stub = stub->right;
-  case 3:
-    stub = stub->right;
-  case 2:
-    stub = stub->right;
-  case 1:
-    stub = stub->left;
-    return (ASTNode *)stub;
-  default:
-    u4 ctr = 1;
-    stub = stub->left;
-    do {
-      if (ctr++ == prodno)
-        return (ASTNode *)stub;
-    } while ((stub = stub->right) != NULL);
-    break;
-  }
-
+ASTNode *get_node(ASTNode *par, u4 prodno) {
+  BinaryTreeStub *stub = par->stub.left;
+  do {
+    if (--prodno == 0)
+      return (ASTNode *)stub;
+  } while ((stub = stub->right) != NULL);
   return NULL;
 }
 

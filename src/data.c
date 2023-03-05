@@ -1,6 +1,7 @@
 #include "data.h"
 #include <stdlib.h>
 #include <string.h>
+#include "stdio.h"
 
 void array_list_init(ArrayList *al, u4 lim) {
   al->buf = (void **)malloc(size2b(lim));
@@ -125,8 +126,10 @@ void _hash_map_extend(HashMap *hmap) {
   memset(hmap->values, 0, size2b(hmap->scale));
 
   u4 index;
-  for (index = 0; index < hmap->scale >> 1; index++)
+  for (index = 0; index < hmap->scale >> 1; index++) {
     hash_map_put(hmap, hmap->keys[index], hmap->values[index]);
+    free(hmap->keys[index]);
+  }
 
   free(old_keys);
   free(old_values);
@@ -169,15 +172,16 @@ void *hash_map_get(HashMap *hmap, char *key) {
   return NULL;
 }
 
+
 void hash_map_free(HashMap *hmap) {
   u4 index;
 
-  for (index = 0; index < hmap->scale; index++) {
-    if (hmap->keys[index] != NULL)
+  for (index = 0; index < hmap->scale && hmap->ctr > 0; index++) {
+    if (hmap->keys[index] != NULL) {
       free(hmap->keys[index]);
-
-    if (hmap->values[index] != NULL)
       free(hmap->values[index]);
+      hmap->ctr--;
+    }
   }
 
   free(hmap->keys);

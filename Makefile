@@ -5,10 +5,10 @@ BISON = bison
 LFLAGS = -lfl -ly
 TARGET = njucc
 
-ifeq ($(ver), dbg)
-CFLAGS = -std=gnu99 -Werror -O3 -I./include
-else
+ifeq ($(VERSION), dbg)
 CFLAGS = -g -std=gnu99 -Werror -O3 -I./include
+else
+CFLAGS = -std=gnu99 -Werror -O3 -I./include
 endif
 
 CFILES = $(shell find ./src -name "*.c")

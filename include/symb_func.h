@@ -5,12 +5,11 @@
 
 typedef struct SymbolFunc {
   char *name;
-  FieldList args;
+  FieldList argl;
 } SymbolFunc;
 
 SymbolFunc *new_symbol_func(char *);
 void arg_add(SymbolFunc *, SymbolField *);
-void arg_cmp(SymbolFunc *, FieldList *);
 
 typedef HashMap FuncTable;
 

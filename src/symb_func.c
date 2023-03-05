@@ -4,16 +4,12 @@
 SymbolFunc *new_symbol_func(char *name) {
   SymbolFunc *func = (SymbolFunc *)malloc(sizeof(SymbolFunc));
   func->name = name;
-  field_list_init(&func->args);
+  field_list_init(&func->argl);
   return func;
 }
 
 void arg_add(SymbolFunc *func, SymbolField *field) {
-  field_list_add(&func->args, field);
-}
-
-void arg_cmp(SymbolFunc *func, FieldList *fl) {
-  field_list_cmp(&func->args, fl);
+  field_list_add(&func->argl, field);
 }
 
 void func_table_add(FuncTable *ft, SymbolFunc *func) {

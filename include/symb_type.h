@@ -10,7 +10,7 @@ typedef struct SymbolType {
   u4 mem;
 } SymbolType;
 
-SymbolType *new_symbol_type(SymbolType *subtype, u4 len);
+SymbolType *new_symbol_type(SymbolType *, u4);
 
 typedef BinaryTree TypeTree;
 

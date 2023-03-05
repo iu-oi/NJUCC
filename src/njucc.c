@@ -49,14 +49,18 @@ int main(int argc, char *argv[], char **envp) {
   ast_init(&rt.ast);
   yyrestart(rt.src);
   yyparse();
+
+  /* show abstract syntax tree */
   if (rt.is_dbg)
     ast_show(&rt.ast, stdout);
   if (rt.ast_out)
     ast_show(&rt.ast, rt.ast_out);
 
-  /* todo semantic check here */
-  /* todo inter code generation here */
+  /* parse abstract syntax tree */
+  symbol_table_init(&rt.symbols);
+  sdt_program((ASTNode *)rt.ast.hierachy.root, &rt.symbols);
 
+  symbol_table_free(&rt.symbols);
   ast_free(&rt.ast);
   return 0;
 

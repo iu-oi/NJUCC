@@ -73,7 +73,7 @@ typedef struct ASTree {
 void ast_init(ASTree *);
 void ast_show(ASTree *, FILE *);
 void ast_reduct(ASTNode *, u4, ...);
-ASTNode *get_ast(ASTNode *, u4);
+ASTNode *get_node(ASTNode *, u4);
 void ast_free(ASTree *);
 
 ASTNode *new_token(ASTree *, u4, char *);

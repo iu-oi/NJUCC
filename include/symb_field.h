@@ -23,7 +23,6 @@ typedef LinkedList FieldList;
 
 void field_list_add(FieldList *, SymbolField *);
 SymbolField *field_list_lookup(FieldList *, char *);
-u1 field_list_cmp(FieldList *, FieldList *);
 
 #define field_list_init linked_list_init
 #define field_list_free linked_list_free
