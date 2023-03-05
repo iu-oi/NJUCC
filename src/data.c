@@ -31,8 +31,8 @@ void array_list_free(ArrayList *al) {
 }
 
 void linked_list_init(LinkedList *ll) {
-  ll->head = ll->tail = (LinkedStub *)malloc(sizeof(LinkedStub));
-  ll->head->next = ll->head->prev = NULL;
+  ll->head.prev = ll->head.next = NULL;
+  ll->tail = &ll->head;
 }
 
 void linked_list_push(LinkedList *ll, LinkedStub *val) {
@@ -63,11 +63,10 @@ void linked_list_remove(LinkedList *ll, LinkedStub *pos) {
 }
 
 void linked_list_free(LinkedList *ll) {
-  while (ll->tail != ll->head) {
+  while (ll->tail != &ll->head) {
     ll->tail = ll->tail->prev;
     free(ll->tail->next);
   }
-  free(ll->head);
 }
 
 void binary_tree_remove(BinaryTreeStub *par, BinaryTreeStub *pos) {

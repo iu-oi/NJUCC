@@ -39,7 +39,7 @@ typedef struct LinkedStub {
 } LinkedStub;
 
 typedef struct LinkedList {
-  LinkedStub *head;
+  LinkedStub head;
   LinkedStub *tail;
 } LinkedList;
 
