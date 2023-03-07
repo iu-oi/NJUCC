@@ -45,6 +45,7 @@ int main(int argc, char *argv[], char **envp) {
       goto bad_usage;
   }
 
+  rt.err_flg = PASSED;
   string_cache_init();
 
   /* generate abstract syntax tree */
@@ -52,17 +53,20 @@ int main(int argc, char *argv[], char **envp) {
   yyrestart(rt.src);
   yyparse();
 
-  /* show abstract syntax tree */
-  if (rt.is_dbg)
-    ast_show(&rt.ast, stdout);
-  if (rt.ast_out)
-    ast_show(&rt.ast, rt.ast_out);
+  if (rt.err_flg == PASSED) {
+    /* show abstract syntax tree */
+    if (rt.is_dbg)
+      ast_show(&rt.ast, stdout);
+    if (rt.ast_out)
+      ast_show(&rt.ast, rt.ast_out);
 
-  /* parse abstract syntax tree */
-  symbol_table_init(&rt.symbols);
-  sdt_program(AST_ROOT(&rt.ast), &rt.symbols);
+    /* parse abstract syntax tree */
+    symbol_table_init(&rt.symbols);
+    sdt_program(AST_ROOT(&rt.ast), &rt.symbols);
 
-  symbol_table_free(&rt.symbols);
+    symbol_table_free(&rt.symbols);
+  }
+
   ast_free(&rt.ast);
 
   string_cache_free();
@@ -75,4 +79,40 @@ bad_usage:
 bad_file:
   perror(argv[argi]);
   return 1;
+}
+
+ERROR(parse) {
+  rt.err_flg |= PARSE_ERR;
+  printf("Parse error at line %d: %s.\n", where, msg);
+  fflush(stdout);
+}
+
+u4 last_syntax_err = 0;
+
+ERROR(syntax) {
+  if (where > last_syntax_err)
+    last_syntax_err = where;
+  else
+    return;
+
+  if ((rt.err_flg & ~SYNTAX_ERR) == PASSED) {
+    rt.err_flg |= SYNTAX_ERR;
+    printf("Syntax error at line %d: %s.\n", where, msg);
+    fflush(stdout);
+  }
+}
+
+u4 last_semantic_err = 0;
+
+ERROR(semantic) {
+  if (where > last_semantic_err)
+    last_semantic_err = where;
+  else
+    return;
+
+  if ((rt.err_flg & ~SEMANTIC_ERR) == PASSED) {
+    rt.err_flg |= SEMANTIC_ERR;
+    printf("Semantic error at line %d: %s.\n", where, msg);
+    fflush(stdout);
+  }
 }

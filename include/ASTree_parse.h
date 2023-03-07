@@ -18,7 +18,6 @@ typedef ArrayStack FrameStack;
 
 void begin_frame(FrameStack *);
 void end_frame(FrameStack *);
-FieldTable *current_frame(FrameStack *);
 
 typedef struct SymbolTable {
   TypeTree types;
@@ -27,28 +26,30 @@ typedef struct SymbolTable {
   FrameStack locals;
 } SymbolTable;
 
+FieldTable *current_frame(SymbolTable *);
+
 #define BASIC_TYPE ((SymbolType *)table->types.root)
 
 void symbol_table_init(SymbolTable *);
 void symbol_table_free(SymbolTable *);
 SymbolField *symbol_table_lookup(SymbolTable *, char *);
 
-#define SDT_ARGS ASTNode *node, SymbolTable *table
+#define SDT_PARAM ASTNode *node, SymbolTable *table
 #define SDT(LABEL) sdt_##LABEL
 
-void SDT(program)(SDT_ARGS);
-void SDT(ext_def_list)(SDT_ARGS);
-void SDT(ext_def)(SDT_ARGS);
-void SDT(def_list)(SDT_ARGS);
-void SDT(def)(SDT_ARGS);
-void SDT(dec_list)(SDT_ARGS);
-SymbolField *SDT(dec)(SDT_ARGS, SymbolType *);
-void SDT(fun_dec)(SDT_ARGS);
-void SDT(var_list)(SDT_ARGS, SymbolFunc *);
-void SDT(comp_st)(SDT_ARGS);
-void SDT(stmt_list)(SDT_ARGS);
-void SDT(stmt)(SDT_ARGS);
-SymbolType *SDT(exp)(SDT_ARGS);
-void SDT(args)(SDT_ARGS, SymbolField *);
+void SDT(program)(SDT_PARAM);
+void SDT(ext_def_list)(SDT_PARAM);
+void SDT(ext_def)(SDT_PARAM);
+void SDT(def_list)(SDT_PARAM);
+void SDT(def)(SDT_PARAM);
+void SDT(dec_list)(SDT_PARAM);
+SymbolField *SDT(dec)(SDT_PARAM, SymbolType *);
+void SDT(fun_dec)(SDT_PARAM);
+void SDT(var_list)(SDT_PARAM, SymbolFunc *);
+void SDT(comp_st)(SDT_PARAM);
+void SDT(stmt_list)(SDT_PARAM);
+void SDT(stmt)(SDT_PARAM);
+SymbolType *SDT(exp)(SDT_PARAM);
+void SDT(args)(SDT_PARAM, SymbolField *);
 
 #endif

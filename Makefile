@@ -34,5 +34,5 @@ syntax-c: $(YFILE)
 
 .PHONY: clean
 clean:
-	rm -f $(LFO) $(YFO) $(OBJS) $(TARGET)
+	rm -f $(LFO) $(YFO) $(OBJS) $(TARGET) core
 	rm -f $(LFC) $(YFC) $(YFC:.c=.h) $(YFC:.tab.c=.output)

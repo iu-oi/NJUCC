@@ -1,4 +1,5 @@
 \.*
+core
 njucc
 lex.yy.c
 syntax.tab.h

@@ -14,6 +14,18 @@ typedef struct Runtime {
   ASTree ast;
   SymbolTable symbols;
   u1 is_dbg;
+  u1 err_flg;
 } Runtime;
+
+#define ERROR(LABEL) void LABEL##_error(const char *msg, u4 where)
+
+ERROR(parse);
+ERROR(syntax);
+ERROR(semantic);
+
+#define PASSED 0b0
+#define PARSE_ERR 0b1
+#define SYNTAX_ERR 0b10
+#define SEMANTIC_ERR 0b100
 
 #endif

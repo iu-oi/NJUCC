@@ -48,7 +48,7 @@ sep [ \f\r\t\v]
 {int} { gen_token(INT, TOK_INT) }
 
 {int_err} {
-  printf("lexical error\n");
+  parse_error("bad integer", yylineno);
   gen_token(INT, TOK_INT)
 }
 
@@ -116,6 +116,6 @@ sep [ \f\r\t\v]
 
 \n { yycolumn = 1; }
 
-. { printf("parse error\n"); }
+. { parse_error("unknown character(s)", yylineno); }
 
 %%

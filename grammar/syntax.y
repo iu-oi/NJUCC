@@ -1,4 +1,5 @@
 %locations
+%define parse.error verbose
 
 %{
   #include "lex.yy.c"
@@ -6,20 +7,20 @@
   #define gen_non_token(NON_TOK, TYPE, RULENO, LINENO) \
   	NON_TOK = new_non_token(&rt.ast, TYPE, RULENO, LINENO);
 
-  int yyerror(char *);
+  int yyerror(const char *);
 %}
 
 %union { ASTNode *node; }
 
-%token <node> INT
-%token <node> SEMI COMMA
-%token <node> RELOP ASSIGNOP
-%token <node> PLUS MINUS STAR DIV
-%token <node> AND OR NOT
-%token <node> TYPE ID
-%token <node> LP RP LB RB LC RC
-%token <node> RETURN IF ELSE WHILE
-%token <node> READ WRITE
+%token <node> INT"digit(s)"
+%token <node> SEMI";" COMMA","
+%token <node> RELOP"op" ASSIGNOP"="
+%token <node> PLUS"+" MINUS"-" STAR"*" DIV"/"
+%token <node> AND"&&" OR"||" NOT"!"
+%token <node> TYPE"type" ID"id"
+%token <node> LP"(" RP")" LB"[" RB"]" LC"{" RC"}"
+%token <node> RETURN"return" IF"if" ELSE"else" WHILE"while"
+%token <node> READ"read" WRITE"write"
 
 %type <node> Program
 %type <node> ExtDefList ExtDef
@@ -63,7 +64,7 @@ ExtDef : TYPE DecList SEMI {
 } | TYPE FunDec CompSt {
 	gen_non_token($$, NON_TOK_EXTDEF, 2, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-};
+} | error SEMI {}; 
 
 DefList : Def DefList {
 	gen_non_token($$, NON_TOK_DEFLIST, 1, @$.first_line)
@@ -75,7 +76,7 @@ DefList : Def DefList {
 Def : TYPE DecList SEMI {
 	gen_non_token($$, NON_TOK_DEF, 1, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-};
+} | TYPE error SEMI {};
 
 DecList : Dec {
 	gen_non_token($$, NON_TOK_DECLIST, 1, @$.first_line)
@@ -99,7 +100,7 @@ FunDec : ID LP RP {
 } | ID LP VarList RP {
 	gen_non_token($$, NON_TOK_FUNDEC, 2, @$.first_line)	
 	ast_reduct($$, 4, $4, $3, $2, $1);
-};
+} | error RP {};
 
 VarList : TYPE Dec {
 	gen_non_token($$, NON_TOK_VARLIST, 1, @$.first_line)
@@ -112,7 +113,7 @@ VarList : TYPE Dec {
 CompSt : LC DefList StmtList RC {
 	gen_non_token($$, NON_TOK_COMPST, 1, @$.first_line)
 	ast_reduct($$, 4, $4, $3, $2, $1);
-};
+} | error RC {};
 
 StmtList : Stmt StmtList {
 	gen_non_token($$, NON_TOK_STMTLIST, 1, @$.first_line)
@@ -139,7 +140,7 @@ Stmt : Exp SEMI {
 } | WHILE LP Exp RP Stmt {
 	gen_non_token($$, NON_TOK_STMT, 6, @$.first_line)
 	ast_reduct($$, 5, $5, $4, $3, $2, $1);
-};
+} | error SEMI {};
 
 Exp : LP Exp RP {
 	gen_non_token($$, NON_TOK_EXP, 1, @$.first_line)
@@ -207,8 +208,8 @@ Args : Exp {
 
 %%
 
-int yyerror(char *msg)
-{
-  printf("syntax error\n");
-  return 0;
+int yyerror(const char *msg) {
+	const char *msg_body = strstr(msg, ",") + 2;
+	syntax_error(msg_body, yylineno);
+	return 0;
 }
