@@ -93,20 +93,20 @@ Dec : ID {
 	ast_reduct($$, 4, $4, $3, $2, $1);
 };
 
-FunDec : ID LP VarList RP {
+FunDec : ID LP RP {
 	gen_non_token($$, NON_TOK_FUNDEC, 1, @$.first_line)	
-	ast_reduct($$, 4, $4, $3, $2, $1);
-} | ID LP RP {
-	gen_non_token($$, NON_TOK_FUNDEC, 2, @$.first_line)	
 	ast_reduct($$, 3, $3, $2, $1);
+} | ID LP VarList RP {
+	gen_non_token($$, NON_TOK_FUNDEC, 2, @$.first_line)	
+	ast_reduct($$, 4, $4, $3, $2, $1);
 };
 
-VarList : TYPE Dec COMMA VarList {
+VarList : TYPE Dec {
 	gen_non_token($$, NON_TOK_VARLIST, 1, @$.first_line)
-	ast_reduct($$, 4, $4, $3, $2, $1);
-} | TYPE Dec {
-	gen_non_token($$, NON_TOK_VARLIST, 2, @$.first_line)
 	ast_reduct($$, 2, $2, $1);
+} | TYPE Dec COMMA VarList {
+	gen_non_token($$, NON_TOK_VARLIST, 2, @$.first_line)
+	ast_reduct($$, 4, $4, $3, $2, $1);
 };
 
 CompSt : LC DefList StmtList RC {
@@ -141,51 +141,51 @@ Stmt : Exp SEMI {
 	ast_reduct($$, 5, $5, $4, $3, $2, $1);
 };
 
-Exp : Exp ASSIGNOP Exp {
+Exp : LP Exp RP {
 	gen_non_token($$, NON_TOK_EXP, 1, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-} | Exp AND Exp {
+} | Exp ASSIGNOP Exp {
 	gen_non_token($$, NON_TOK_EXP, 2, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-} | Exp OR Exp {
+} | Exp PLUS Exp {
 	gen_non_token($$, NON_TOK_EXP, 3, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-} | Exp RELOP Exp {
+} | Exp MINUS Exp {
 	gen_non_token($$, NON_TOK_EXP, 4, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-} | Exp PLUS Exp {
+} | Exp STAR Exp {
 	gen_non_token($$, NON_TOK_EXP, 5, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-} | Exp MINUS Exp {
+} | Exp DIV Exp {
 	gen_non_token($$, NON_TOK_EXP, 6, @$.first_line)
 	ast_reduct($$, 3, $3, $2, $1);
-} | Exp STAR Exp {
-	gen_non_token($$, NON_TOK_EXP, 7, @$.first_line)
-	ast_reduct($$, 3, $3, $2, $1);
-} | Exp DIV Exp {
-	gen_non_token($$, NON_TOK_EXP, 8, @$.first_line)
-	ast_reduct($$, 3, $3, $2, $1);
-} | LP Exp RP {
-	gen_non_token($$, NON_TOK_EXP, 9, @$.first_line)
-	ast_reduct($$, 3, $3, $2, $1);
 } | MINUS Exp {
-	gen_non_token($$, NON_TOK_EXP, 10, @$.first_line)
+	gen_non_token($$, NON_TOK_EXP, 7, @$.first_line)
 	ast_reduct($$, 2, $2, $1);
 } | NOT Exp {
-	gen_non_token($$, NON_TOK_EXP, 11, @$.first_line)
+	gen_non_token($$, NON_TOK_EXP, 8, @$.first_line)
 	ast_reduct($$, 2, $2, $1);
-} | WRITE LP Exp RP {
+} | Exp AND Exp {
+	gen_non_token($$, NON_TOK_EXP, 9, @$.first_line)
+	ast_reduct($$, 3, $3, $2, $1);
+} | Exp OR Exp {
+	gen_non_token($$, NON_TOK_EXP, 10, @$.first_line)
+	ast_reduct($$, 3, $3, $2, $1);
+} | Exp RELOP Exp {
+	gen_non_token($$, NON_TOK_EXP, 11, @$.first_line)
+	ast_reduct($$, 3, $3, $2, $1);
+} | READ LP RP {
 	gen_non_token($$, NON_TOK_EXP, 12, @$.first_line)
-	ast_reduct($$, 4, $4, $3, $2, $1);
-} | ID LP Args RP {
+	ast_reduct($$, 3, $3, $2, $1);
+} | WRITE LP Exp RP {
 	gen_non_token($$, NON_TOK_EXP, 13, @$.first_line)
 	ast_reduct($$, 4, $4, $3, $2, $1);
-} | READ LP RP {
-	gen_non_token($$, NON_TOK_EXP, 14, @$.first_line)
-	ast_reduct($$, 3, $3, $2, $1);
 } | ID LP RP {
-	gen_non_token($$, NON_TOK_EXP, 15, @$.first_line)
+	gen_non_token($$, NON_TOK_EXP, 14, @$.first_line)
 	ast_reduct($$, 2, $2, $1);
+} | ID LP Args RP {
+	gen_non_token($$, NON_TOK_EXP, 15, @$.first_line)
+	ast_reduct($$, 4, $4, $3, $2, $1);
 } | Exp LB Exp RB {
 	gen_non_token($$, NON_TOK_EXP, 16, @$.first_line)
 	ast_reduct($$, 4, $4, $3, $2, $1);
@@ -197,12 +197,12 @@ Exp : Exp ASSIGNOP Exp {
 	ast_reduct($$, 1, $1);
 };
 	
-Args : Exp COMMA Args {
+Args : Exp {
 	gen_non_token($$, NON_TOK_ARGS, 1, @$.first_line)
-	ast_reduct($$, 3, $3, $2, $1);
-} | Exp {
-	gen_non_token($$, NON_TOK_ARGS, 2, @$.first_line)
 	ast_reduct($$, 1, $1);
+} | Exp COMMA Args {
+	gen_non_token($$, NON_TOK_ARGS, 2, @$.first_line)
+	ast_reduct($$, 3, $3, $2, $1);
 };
 
 %%

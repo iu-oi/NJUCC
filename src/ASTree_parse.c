@@ -106,7 +106,7 @@ SymbolField *SDT(dec)(SDT_ARGS, SymbolType *type) {
 void SDT(fun_dec)(SDT_ARGS) {
   SymbolFunc *new_func = new_symbol_func(TOKEN(get_node(node, 1)).text);
 
-  if (NON_TOKEN(node).ruleno == 1)
+  if (NON_TOKEN(node).ruleno == 2)
     sdt_var_list(get_node(node, 3), table, new_func);
 
   if (func_table_lookup(&table->funcs, new_func->name) != NULL) {
@@ -130,7 +130,7 @@ void SDT(var_list)(SDT_ARGS, SymbolFunc *func) {
               &table->globs);
   }
 
-  if (NON_TOKEN(node).ruleno == 1)
+  if (NON_TOKEN(node).ruleno == 2)
     sdt_var_list(get_node(node, 4), table, func);
 }
 
@@ -177,6 +177,8 @@ SymbolType *SDT(exp)(SDT_ARGS) {
   u4 ruleno = NON_TOKEN(node).ruleno;
 
   if (ruleno == 1) {
+    return sdt_exp(get_node(node, 2), table);
+  } else if (ruleno == 2) {
     u4 left_rule_no = NON_TOKEN(get_node(node, 1)).ruleno;
     SymbolType *type_left = sdt_exp(get_node(node, 1), table);
     SymbolType *type_right = sdt_exp(get_node(node, 3), table);
@@ -186,39 +188,43 @@ SymbolType *SDT(exp)(SDT_ARGS) {
     if (type_left != BASIC_TYPE || type_left != BASIC_TYPE) {
       /* error here */
     }
-  } else if (ruleno >= 2 && ruleno <= 8) {
+  } else if (ruleno >= 3 && ruleno <= 6) {
     SymbolType *type_arg1 = sdt_exp(get_node(node, 1), table);
     SymbolType *type_arg2 = sdt_exp(get_node(node, 3), table);
     if (type_arg1 != BASIC_TYPE || type_arg2 != BASIC_TYPE) {
       /* error here */
     }
-  } else if (ruleno == 9) {
-    return sdt_exp(get_node(node, 2), table);
-  } else if (ruleno == 10 || ruleno == 11) {
+  } else if (ruleno == 7) {
     SymbolType *type_arg1 = sdt_exp(get_node(node, 2), table);
     if (type_arg1 != BASIC_TYPE) {
       /* error here */
     }
+  } else if (ruleno == 8) {
+    SymbolType *type_arg1 = sdt_exp(get_node(node, 2), table);
+    if (type_arg1 != BASIC_TYPE) {
+      /* error here */
+    }
+  } else if (ruleno >= 9 && ruleno <= 11) {
+    SymbolType *type_arg1 = sdt_exp(get_node(node, 1), table);
+    SymbolType *type_arg2 = sdt_exp(get_node(node, 3), table);
+    if (type_arg1 != BASIC_TYPE || type_arg2 != BASIC_TYPE) {
+      /* error here */
+    }
   } else if (ruleno == 12) {
+  } else if (ruleno == 13) {
     SymbolType *type_arg1 = sdt_exp(get_node(node, 3), table);
     if (type_arg1 != BASIC_TYPE) {
       /* error here */
     }
-  } else if (ruleno == 13) {
+  } else if (ruleno == 14 || ruleno == 15) {
     char *tag = TOKEN(get_node(node, 1)).text;
     SymbolFunc *func = func_table_lookup(&table->funcs, tag);
     if (func == NULL) {
       /* error here */
     }
-    sdt_args(get_node(node, 3), table,
-             (SymbolField *)linked_list_first(&func->paraml));
-  } else if (ruleno == 14) {
-  } else if (ruleno == 15) {
-    char *tag = TOKEN(get_node(node, 1)).text;
-    SymbolFunc *func = func_table_lookup(&table->funcs, tag);
-    if (func == NULL) {
-      /* error here */
-    }
+    if (ruleno == 15)
+      sdt_args(get_node(node, 3), table,
+               (SymbolField *)linked_list_first(&func->paraml));
   } else if (ruleno == 16) {
     SymbolType *type_arr = sdt_exp(get_node(node, 1), table);
     SymbolType *type_index = sdt_exp(get_node(node, 3), table);
@@ -248,7 +254,7 @@ void SDT(args)(SDT_ARGS, SymbolField *param) {
     /* error here */
   }
 
-  if (NON_TOKEN(node).ruleno == 1) {
+  if (NON_TOKEN(node).ruleno == 2) {
     if (param == NULL)
       sdt_args(get_node(node, 3), table, NULL);
     else

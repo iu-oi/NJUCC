@@ -13,8 +13,8 @@ endif
 
 CFILES = $(shell find ./src -name "*.c")
 OBJS = $(CFILES:.c=.o)
-LFILE = $(shell find ./syntax -name "*.l")
-YFILE = $(shell find ./syntax -name "*.y")
+LFILE = $(shell find ./grammar -name "*.l")
+YFILE = $(shell find ./grammar -name "*.y")
 LFC = $(shell find ./ -name "*.l" | sed s/'[^/]*\.l'/lex.yy.c/)
 YFC = $(shell find ./ -name "*.y" | sed s/'[^/]*\.y'/syntax.tab.c/)
 LFO = $(LFC:.c=.o)

@@ -79,11 +79,11 @@ $3$ *An identifier must not start with a digit.*
   - ID
   - Dec LB INT RB
 - FunDec →
-  - ID LP VarList RP
   - ID LP RP
+  - ID LP VarList RP
 - VarList →
-  - TYPE Dec COMMA VarList
   - TYPE Dec
+  - TYPE Dec COMMA VarList
 - CompSt →
   - LC DefList StmtList RC
 - StmtList →
@@ -97,26 +97,24 @@ $3$ *An identifier must not start with a digit.*
   - IF LP Exp RP Stmt ELSE Stmt
   - WHILE LP Exp RP Stmt
 - Exp →
+  - LP Exp RP
   - Exp ASSIGNOP Exp
-  - Exp AND Exp
-  - Exp OR Exp
-  - Exp RELOP Exp
   - Exp PLUS Exp
   - Exp MINUS Exp
   - Exp STAR Exp
   - Exp DIV Exp
-  - LP Exp RP
   - MINUS Exp
   - NOT Exp
-  - WRITE LP Exp RP
-  - ID LP Args RP
+  - Exp AND Exp
+  - Exp OR Exp
+  - Exp RELOP Exp
   - READ LP RP
+  - WRITE LP Exp RP
   - ID LP RP
+  - ID LP Args RP
   - Exp LB Exp RB
-  - Exp DOT ID
   - ID
   - INT
-  - FLOAT
 - Args →
-  - Exp COMMA Args
   - Exp
+  - Exp COMMA Args
