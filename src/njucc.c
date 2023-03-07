@@ -45,6 +45,8 @@ int main(int argc, char *argv[], char **envp) {
       goto bad_usage;
   }
 
+  string_cache_init();
+
   /* generate abstract syntax tree */
   ast_init(&rt.ast);
   yyrestart(rt.src);
@@ -58,10 +60,12 @@ int main(int argc, char *argv[], char **envp) {
 
   /* parse abstract syntax tree */
   symbol_table_init(&rt.symbols);
-  sdt_program((ASTNode *)rt.ast.hierachy.root, &rt.symbols);
+  sdt_program(AST_ROOT(&rt.ast), &rt.symbols);
 
   symbol_table_free(&rt.symbols);
   ast_free(&rt.ast);
+
+  string_cache_free();
   return 0;
 
 bad_usage:

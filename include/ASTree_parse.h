@@ -9,11 +9,12 @@
 typedef ArrayStack FrameStack;
 
 #define frame_stack_init array_stack_init
-#define frame_stack_free array_stack_free
 #define frame_stack_push array_stack_push
 #define frame_stack_pop array_stack_pop
+#define frame_stack_free array_stack_free
+#define frame_at array_stack_get
+#define frame_stack_empty array_stack_empty
 #define frame_stack_top array_stack_top
-#define frame_at array_list_get
 
 void begin_frame(FrameStack *);
 void end_frame(FrameStack *);
@@ -43,7 +44,7 @@ void SDT(def)(SDT_ARGS);
 void SDT(dec_list)(SDT_ARGS);
 SymbolField *SDT(dec)(SDT_ARGS, SymbolType *);
 void SDT(fun_dec)(SDT_ARGS);
-void SDT(var_list)(SDT_ARGS, FieldList *);
+void SDT(var_list)(SDT_ARGS, SymbolFunc *);
 void SDT(comp_st)(SDT_ARGS);
 void SDT(stmt_list)(SDT_ARGS);
 void SDT(stmt)(SDT_ARGS);

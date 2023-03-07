@@ -62,25 +62,27 @@ typedef struct ASTNode {
 
 #define TOKEN(ASTN) ((ASTN)->attr.token)
 #define NON_TOKEN(ASTN) ((ASTN)->attr.non_token)
+#define AST_ROOT(AST) ((ASTNode *)(AST)->hierachy.root)
 
 typedef struct ASTree {
   BinaryTree hierachy;
   ArrayList tokens;
   ArrayList non_tokens;
-  HashMap texts;
 } ASTree;
 
 void ast_init(ASTree *);
 void ast_show(ASTree *, FILE *);
 void ast_reduct(ASTNode *, u4, ...);
-ASTNode *get_node(ASTNode *, u4);
 void ast_free(ASTree *);
+
+ASTNode *get_node(ASTNode *, u4);
 
 ASTNode *new_token(ASTree *, u4, char *);
 ASTNode *new_non_token(ASTree *, u4, u4, u4);
 
-void _show_token(ASTNode *, FILE *, u4);
-void _show_non_token(ASTNode *, FILE *, u4);
+void _show_token(ASTNode *, FILE *);
+void _show_non_token(ASTNode *, FILE *);
+void _show_indent(FILE *, u4);
 void _show_ast_node(ASTNode *, FILE *, u4);
 
 #endif

@@ -79,7 +79,7 @@ void SDT(dec_list)(SDT_ARGS) {
   SymbolField *new_field = sdt_dec(get_node(node, 1), table, BASIC_TYPE);
 
   FieldTable *frame;
-  if (table->locals.size == 0)
+  if (frame_stack_empty(&table->locals))
     frame = &table->globs;
   else
     frame = current_frame(&table->locals);
@@ -107,7 +107,7 @@ void SDT(fun_dec)(SDT_ARGS) {
   SymbolFunc *new_func = new_symbol_func(TOKEN(get_node(node, 1)).text);
 
   if (NON_TOKEN(node).ruleno == 1)
-    sdt_var_list(get_node(node, 3), table, &new_func->argl);
+    sdt_var_list(get_node(node, 3), table, new_func);
 
   if (func_table_lookup(&table->funcs, new_func->name) != NULL) {
     /* todo error */
@@ -117,7 +117,7 @@ void SDT(fun_dec)(SDT_ARGS) {
   }
 }
 
-void SDT(var_list)(SDT_ARGS, FieldList *argl) {
+void SDT(var_list)(SDT_ARGS, SymbolFunc *func) {
   SymbolField *new_field = sdt_dec(get_node(node, 2), table, BASIC_TYPE);
 
   FieldTable *frame = current_frame(&table->locals);
@@ -126,11 +126,12 @@ void SDT(var_list)(SDT_ARGS, FieldList *argl) {
     free(new_field);
   } else {
     field_table_add(frame, new_field);
-    field_list_add(argl, new_field);
+    new_param(func->name, new_field->name, new_field->type, &func->paraml,
+              &table->globs);
   }
 
   if (NON_TOKEN(node).ruleno == 1)
-    sdt_var_list(get_node(node, 4), table, argl);
+    sdt_var_list(get_node(node, 4), table, func);
 }
 
 void SDT(comp_st)(SDT_ARGS) {
@@ -209,7 +210,8 @@ SymbolType *SDT(exp)(SDT_ARGS) {
     if (func == NULL) {
       /* error here */
     }
-    sdt_args(get_node(node, 3), table, (SymbolField *)func->argl.head.next);
+    sdt_args(get_node(node, 3), table,
+             (SymbolField *)linked_list_first(&func->paraml));
   } else if (ruleno == 14) {
   } else if (ruleno == 15) {
     char *tag = TOKEN(get_node(node, 1)).text;
@@ -240,16 +242,16 @@ SymbolType *SDT(exp)(SDT_ARGS) {
   return BASIC_TYPE;
 }
 
-void SDT(args)(SDT_ARGS, SymbolField *formal) {
+void SDT(args)(SDT_ARGS, SymbolField *param) {
   SymbolType *curr_type = sdt_exp(get_node(node, 1), table);
-  if (formal != NULL && curr_type != formal->type) {
+  if (param != NULL && curr_type != param->type) {
     /* error here */
   }
 
   if (NON_TOKEN(node).ruleno == 1) {
-    if (formal == NULL)
+    if (param == NULL)
       sdt_args(get_node(node, 3), table, NULL);
     else
-      sdt_args(get_node(node, 3), table, (SymbolField *)formal->stub.next);
+      sdt_args(get_node(node, 3), table, (SymbolField *)param->stub.next);
   }
 }

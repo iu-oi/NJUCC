@@ -1,7 +1,6 @@
 #include "data.h"
 #include <stdlib.h>
 #include <string.h>
-#include "stdio.h"
 
 void array_list_init(ArrayList *al, u4 lim) {
   al->buf = (void **)malloc(size2b(lim));
@@ -15,7 +14,7 @@ void _array_list_extend(ArrayList *al) {
 }
 
 void array_list_push(ArrayList *al, void *val) {
-  if (al->size == al->lim)
+  if (_array_list_full(al))
     _array_list_extend(al);
   al->buf[al->size++] = val;
 }
@@ -26,7 +25,7 @@ void *array_list_pop(ArrayList *al) {
 }
 
 void array_list_free(ArrayList *al) {
-  while (al->size != 0)
+  while (!array_list_empty(al))
     free(al->buf[--al->size]);
   free(al->buf);
 }
@@ -86,11 +85,10 @@ void _binary_stub_free(BinaryTreeStub *btrh) {
 }
 
 u4 hash_elf(char *key) {
-  u1 ch;
   u4 hash = 0, high_4 = 0;
 
-  while ((ch = *key++) != 0) {
-    hash = (hash << 4) + ch;
+  while (*key != '\0') {
+    hash = (hash << 4) + (u1)*key++;
     high_4 = hash & (0xf << 28);
     if (high_4 != 0) {
       hash ^= high_4 >> 24;
@@ -102,11 +100,8 @@ u4 hash_elf(char *key) {
 }
 
 void hash_map_init(HashMap *hmap, Hash hash, u4 scale) {
-  hmap->keys = (char **)malloc(size2b(scale));
-  memset(hmap->keys, 0, size2b(scale));
-
-  hmap->values = (void **)malloc(size2b(scale));
-  memset(hmap->values, 0, size2b(scale));
+  hmap->pairs = (KeyPair *)malloc(size2b(scale << 1));
+  memset(hmap->pairs, 0, size2b(scale << 1));
 
   hmap->scale = scale;
   hmap->ctr = 0;
@@ -114,29 +109,22 @@ void hash_map_init(HashMap *hmap, Hash hash, u4 scale) {
 }
 
 void _hash_map_extend(HashMap *hmap) {
-  char **old_keys = hmap->keys;
-  void **old_values = hmap->values;
+  KeyPair *old_pairs = hmap->pairs;
 
   hmap->scale <<= 1;
-
-  hmap->keys = (char **)malloc(size2b(hmap->scale));
-  memset(hmap->keys, 0, size2b(hmap->scale));
-
-  hmap->values = (void **)malloc(size2b(hmap->scale));
-  memset(hmap->values, 0, size2b(hmap->scale));
+  hmap->pairs = (KeyPair *)malloc(size2b(hmap->scale << 1));
+  memset(hmap->pairs, 0, size2b(hmap->scale << 1));
 
   u4 index;
   for (index = 0; index < hmap->scale >> 1; index++) {
-    hash_map_put(hmap, hmap->keys[index], hmap->values[index]);
-    free(hmap->keys[index]);
+    hash_map_put(hmap, hmap->pairs[index].key, hmap->pairs[index].value);
+    free(hmap->pairs[index].key);
   }
-
-  free(old_keys);
-  free(old_values);
+  free(old_pairs);
 }
 
 void hash_map_put(HashMap *hmap, char *key, void *val) {
-  if (hmap->ctr == hmap->scale)
+  if (_hash_map_full(hmap))
     _hash_map_extend(hmap);
   hmap->ctr++;
 
@@ -145,12 +133,11 @@ void hash_map_put(HashMap *hmap, char *key, void *val) {
 
   while (off < hmap->scale) {
     u4 index = (hashed + off++) % hmap->scale;
-
-    if (hmap->keys[index] == NULL) {
+    if (hmap->pairs[index].key == NULL) {
       char *key_copy = (char *)malloc(strlen(key) + 1);
       strcpy(key_copy, key);
-      hmap->keys[index] = key_copy;
-      hmap->values[index] = val;
+      hmap->pairs[index].key = key_copy;
+      hmap->pairs[index].value = val;
       break;
     }
   }
@@ -162,28 +149,45 @@ void *hash_map_get(HashMap *hmap, char *key) {
 
   while (off < hmap->scale) {
     u4 index = (hashed + off++) % hmap->scale;
-
-    if (hmap->keys[index] == NULL)
+    if (hmap->pairs[index].key == NULL)
       return NULL;
-    else if (strcmp(hmap->keys[index], key) == 0)
-      return hmap->values[index];
+    else if (strcmp(hmap->pairs[index].key, key) == 0)
+      return hmap->pairs[index].value;
   }
-
   return NULL;
 }
-
 
 void hash_map_free(HashMap *hmap) {
   u4 index;
 
-  for (index = 0; index < hmap->scale && hmap->ctr > 0; index++) {
-    if (hmap->keys[index] != NULL) {
-      free(hmap->keys[index]);
-      free(hmap->values[index]);
+  for (index = 0; index < hmap->scale && !_hash_map_empty(hmap); index++) {
+    if (hmap->pairs[index].key != NULL) {
+      free(hmap->pairs[index].key);
+      free(hmap->pairs[index].value);
       hmap->ctr--;
     }
   }
+  free(hmap->pairs);
+}
 
-  free(hmap->keys);
-  free(hmap->values);
+HashMap strings;
+
+void string_cache_init() {
+  hash_map_init(&strings, hash_elf, 4096);
+}
+
+void string_cache_free() {
+  hash_map_free(&strings);
+}
+
+char *new_string(char *req) {
+  char *str = (char *)hash_map_get(&strings, req);
+
+  if (str == NULL) {
+    str = (char *)malloc(strlen(req) + 1);
+    strcpy(str, req);
+    hash_map_put(&strings, str, str);
+  }
+
+  return str;
 }

@@ -6,7 +6,7 @@ LFLAGS = -lfl -ly
 TARGET = njucc
 
 ifeq ($(VERSION), dbg)
-CFLAGS = -g -std=gnu99 -Werror -O3 -I./include
+CFLAGS = -g -std=gnu99 -Werror -O0 -I./include
 else
 CFLAGS = -std=gnu99 -Werror -O3 -I./include
 endif
