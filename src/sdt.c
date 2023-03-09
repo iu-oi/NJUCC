@@ -1,4 +1,4 @@
-#include "ASTree_parse.h"
+#include "sdt.h"
 #include "njucc.h"
 #include <stdlib.h>
 
@@ -177,8 +177,7 @@ SymbolType *SDT(exp)(SDT_PARAM) {
     if (func == NULL)
       semantic_error("undefined function", NON_TOKEN(node).lineno);
     else if (ruleno == 15)
-      sdt_args(get_node(node, 3), table,
-               (SymbolField *)linked_list_first(&func->paraml));
+      sdt_args(get_node(node, 3), table, (SymbolField *)func->paraml.head.next);
 
   } else if (ruleno == 16) {
     SymbolType *type_arr = sdt_exp(get_node(node, 1), table);

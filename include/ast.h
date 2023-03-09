@@ -1,7 +1,7 @@
-#ifndef __ASTREE_H__
-#define __ASTREE_H__
+#ifndef __AST_H__
+#define __AST_H__
 
-#include "data.h"
+#include "mm.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -65,25 +65,24 @@ typedef struct ASTNode {
 #define NON_TOKEN(ASTN) ((ASTN)->attr.non_token)
 #define AST_ROOT(AST) ((ASTNode *)(AST)->hierachy.root)
 
+void _show_indent(FILE *out, u4 indent);
+void _show_token(ASTNode *node, FILE *out);
+void _show_non_token(ASTNode *node, FILE *out);
+void _show_ast_node(ASTNode *node, FILE *out, u4 indent);
+
 typedef struct ASTree {
   BinaryTree hierachy;
   ArrayList tokens;
   ArrayList non_tokens;
 } ASTree;
 
-void ast_init(ASTree *);
-void ast_show(ASTree *, FILE *);
-void ast_reduct(ASTNode *, u4, ...);
-void ast_free(ASTree *);
+void ast_init(ASTree *ast);
+void ast_free(ASTree *ast);
+void ast_reduct(ASTNode *rule, u4 ctr, ...);
+#define ast_show(AST, OUT) _show_ast_node(AST_ROOT(AST), OUT, 0)
 
-ASTNode *get_node(ASTNode *, u4);
-
-ASTNode *new_token(ASTree *, u4, char *);
-ASTNode *new_non_token(ASTree *, u4, u4, u4);
-
-void _show_token(ASTNode *, FILE *);
-void _show_non_token(ASTNode *, FILE *);
-void _show_indent(FILE *, u4);
-void _show_ast_node(ASTNode *, FILE *, u4);
+ASTNode *new_token(ASTree *ast, u4 type, char *text);
+ASTNode *new_non_token(ASTree *ast, u4 type, u4 ruleno, u4 lineno);
+ASTNode *get_node(ASTNode *par, u4 prodno);
 
 #endif

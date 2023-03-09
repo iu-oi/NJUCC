@@ -3,7 +3,7 @@
 
 %{
   #include "njucc.h"
-  #include "ASTree.h"
+  #include "ast.h"
   #include "syntax.tab.h"
 
   #define YY_USER_ACTION \
@@ -18,7 +18,7 @@
 
   #define gen_token(TOK, TYPE) \
     yylval.node = new_token(&rt.ast, TYPE, yytext); \
-    return TOK;
+    return TOK
 %}
 
 oct 0[0-7]+
@@ -45,72 +45,72 @@ sep [ \f\r\t\v]
   }
 }
 
-{int} { gen_token(INT, TOK_INT) }
+{int} { gen_token(INT, TOK_INT); }
 
 {int_err} {
   parse_error("bad integer", yylineno);
-  gen_token(INT, TOK_INT)
+  gen_token(INT, TOK_INT);
 }
 
-";" { gen_token(SEMI, TOK_SEMI) }
+";" { gen_token(SEMI, TOK_SEMI); }
 
-"," { gen_token(COMMA, TOK_COMMA) }
+"," { gen_token(COMMA, TOK_COMMA); }
 
-"==" { gen_token(RELOP, TOK_RELOP) }
+"==" { gen_token(RELOP, TOK_RELOP); }
 
-"!=" { gen_token(RELOP, TOK_RELOP) }
+"!=" { gen_token(RELOP, TOK_RELOP); }
 
-">=" { gen_token(RELOP, TOK_RELOP) }
+">=" { gen_token(RELOP, TOK_RELOP); }
 
-"<=" { gen_token(RELOP, TOK_RELOP) }
+"<=" { gen_token(RELOP, TOK_RELOP); }
 
-">" { gen_token(RELOP, TOK_RELOP) }
+">" { gen_token(RELOP, TOK_RELOP); }
 
-"<" { gen_token(RELOP, TOK_RELOP) }
+"<" { gen_token(RELOP, TOK_RELOP); }
 
-"=" { gen_token(ASSIGNOP, TOK_ASSIGNOP) }
+"=" { gen_token(ASSIGNOP, TOK_ASSIGNOP); }
 
-"+" { gen_token(PLUS, TOK_PLUS) }
+"+" { gen_token(PLUS, TOK_PLUS); }
 
-"-" { gen_token(MINUS, TOK_MINUS) }
+"-" { gen_token(MINUS, TOK_MINUS); }
 
-"*" { gen_token(STAR, TOK_STAR) }
+"*" { gen_token(STAR, TOK_STAR); }
 
-"/" { gen_token(DIV, TOK_DIV) }
+"/" { gen_token(DIV, TOK_DIV); }
 
-"&&" { gen_token(AND, TOK_AND) }
+"&&" { gen_token(AND, TOK_AND); }
 
-"||" { gen_token(OR, TOK_OR) }
+"||" { gen_token(OR, TOK_OR); }
 
-"!" { gen_token(NOT, TOK_NOT) }
+"!" { gen_token(NOT, TOK_NOT); }
 
-"(" { gen_token(LP, TOK_LP) }
+"(" { gen_token(LP, TOK_LP); }
 
-")" { gen_token(RP, TOK_RP) }
+")" { gen_token(RP, TOK_RP); }
 
-"[" { gen_token(LB, TOK_LB) }
+"[" { gen_token(LB, TOK_LB); }
 
-"]" { gen_token(RB, TOK_RB) }
+"]" { gen_token(RB, TOK_RB); }
 
-"{" { gen_token(LC, TOK_LC) }
+"{" { gen_token(LC, TOK_LC); }
 
-"}" { gen_token(RC, TOK_RC) }
+"}" { gen_token(RC, TOK_RC); }
 
-"return" { gen_token(RETURN, TOK_RETURN) }
+"return" { gen_token(RETURN, TOK_RETURN); }
 
-"if" { gen_token(IF, TOK_IF) }
+"if" { gen_token(IF, TOK_IF); }
 
-"else" { gen_token(ELSE, TOK_ELSE) }
+"else" { gen_token(ELSE, TOK_ELSE); }
 
-"while" { gen_token(WHILE, TOK_WHILE) }
+"while" { gen_token(WHILE, TOK_WHILE); }
 
-"read" { gen_token(READ, TOK_READ) }
+"read" { gen_token(READ, TOK_READ); }
 
-"write" { gen_token(WRITE, TOK_WRITE) }
+"write" { gen_token(WRITE, TOK_WRITE); }
 
-"int" { gen_token(TYPE, TOK_TYPE) }
+"int" { gen_token(TYPE, TOK_TYPE); }
 
-{id} { gen_token(ID, TOK_ID) }
+{id} { gen_token(ID, TOK_ID); }
 
 {sep} { }
 

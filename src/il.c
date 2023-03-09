@@ -1,4 +1,4 @@
-#include "code_gen.h"
+#include "il.h"
 #include <stdlib.h>
 
 Code *new_code(u4 op, ...) {
@@ -112,32 +112,30 @@ void _show_code(Code *code, FILE *out) {
   fflush(stdout);
 }
 
-void code_seg_init(CodeSegment *cs) {
-  hash_map_init(&cs->vars, hash_elf, 4096);
-  linked_list_init(&cs->codel);
-  cs->local_ctr = cs->tmp_ctr = 0;
+void code_list_init(CodeList *cl) {
+  hash_map_init(&cl->vars, hash_elf, 4096);
+  linked_list_init(&cl->list);
+  cl->local_ctr = cl->tmp_ctr = 0;
 }
 
-void code_seg_free(CodeSegment *cs) {
-  hash_map_free(&cs->vars);
-  linked_list_free(&cs->codel);
+void code_list_free(CodeList *cl) {
+  hash_map_free(&cl->vars);
+  linked_list_free(&cl->list);
 }
 
-void code_seg_show(CodeSegment *cs, FILE *out) {
-  LinkedStub *stub = linked_list_first(&cs->codel);
-  while (stub != NULL) {
+void code_list_show(CodeList *cl, FILE *out) {
+  LinkedStub *stub = &cl->list.head;
+  while ((stub = stub->next) != NULL)
     _show_code((Code *)stub, out);
-    stub = stub->next;
-  }
 }
 
-void code_seg_append(CodeSegment *cs, Code *code) {
-  if (linked_list_empty(&cs->codel))
+void code_list_append(CodeList *cl, Code *code) {
+  if (linked_list_empty(&cl->list))
     code->lineno = 1;
   else
-    code->lineno = ((Code *)linked_list_last(&cs->codel))->lineno + 1;
+    code->lineno = ((Code *)cl->list.tail)->lineno + 1;
 
-  linked_list_push(&cs->codel, &code->stub);
+  linked_list_push(&cl->list, &code->stub);
 }
 
 char *_num2name(char *fmt, u4 num) {
@@ -146,29 +144,29 @@ char *_num2name(char *fmt, u4 num) {
   return new_string(buf);
 }
 
-Variable *gen_glob(CodeSegment *cs, char *name, u4 mem) {
+Variable *gen_glob(CodeList *cl, char *name, u4 mem) {
   Variable *glob_var = (Variable *)malloc(sizeof(Variable));
   glob_var->name = name;
   glob_var->mem = mem;
 
-  hash_map_put(&cs->vars, name, glob_var);
+  hash_map_put(&cl->vars, name, glob_var);
   return glob_var;
 }
 
-Variable *gen_local(CodeSegment *cs, u4 mem) {
+Variable *gen_local(CodeList *cl, u4 mem) {
   Variable *local_var = (Variable *)malloc(sizeof(Variable));
-  local_var->name = _num2name("v%d", cs->local_ctr++);
+  local_var->name = _num2name("v%d", cl->local_ctr++);
   local_var->mem = mem;
 
-  hash_map_put(&cs->vars, local_var->name, local_var);
+  hash_map_put(&cl->vars, local_var->name, local_var);
   return local_var;
 }
 
-Variable *gen_tmp(CodeSegment *cs) {
+Variable *gen_tmp(CodeList *cl) {
   Variable *tmp_var = (Variable *)malloc(sizeof(Variable));
-  tmp_var->name = _num2name("t%d", cs->tmp_ctr++);
+  tmp_var->name = _num2name("t%d", cl->tmp_ctr++);
   tmp_var->mem = 1;
 
-  hash_map_put(&cs->vars, tmp_var->name, tmp_var);
+  hash_map_put(&cl->vars, tmp_var->name, tmp_var);
   return tmp_var;
 }

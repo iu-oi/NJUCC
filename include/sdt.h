@@ -1,9 +1,9 @@
-#ifndef __ASTREE_PARSE_H__
-#define __ASTREE_PARSE_H__
+#ifndef __SDT_H__
+#define __SDT_H__
 
-#include "ASTree.h"
-#include "code_gen.h"
-#include "symb_table.h"
+#include "ast.h"
+#include "il.h"
+#include "symb.h"
 
 #define SDT_PARAM ASTNode *node, SymbolTable *table
 #define SDT(LABEL) sdt_##LABEL

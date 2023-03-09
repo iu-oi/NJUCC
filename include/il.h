@@ -1,7 +1,7 @@
-#ifndef __CODE_GEN_H__
-#define __CODE_GEN_H__
+#ifndef __IL_H__
+#define __IL_H__
 
-#include "data.h"
+#include "mm.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -71,28 +71,28 @@ typedef struct Code {
   } src1, src2;
 } Code;
 
-Code *new_code(u4, ...);
-void _show_code(Code *, FILE *);
+Code *new_code(u4 op, ...);
+void _show_code(Code *code, FILE *out);
 
-typedef struct CodeSegment {
+typedef struct CodeList {
   HashMap vars;
-  LinkedList codel;
+  LinkedList list;
   u4 local_ctr;
   u4 tmp_ctr;
-} CodeSegment;
+} CodeList;
 
-void code_seg_init(CodeSegment *);
-void code_seg_free(CodeSegment *);
-void code_seg_show(CodeSegment *, FILE *);
-void code_seg_append(CodeSegment *, Code *);
+void code_list_init(CodeList *cl);
+void code_list_free(CodeList *cl);
+void code_list_show(CodeList *cl, FILE *out);
+void code_list_append(CodeList *cl, Code *code);
 
-#define gen_code(CODE_SEG, CODE_TYP, ...)                                      \
-  code_seg_append(CODE_SEG, new_code(CODE_TYP, __VA_ARGS__))
+#define gen_code(CODEL, CODET, ...)                                            \
+  code_list_append(CODEL, new_code(CODET, __VA_ARGS__))
 
-char *_num2name(char *, u4);
+char *_num2name(char *fmt, u4 num);
 
-Variable *gen_glob(CodeSegment *, char *, u4);
-Variable *gen_local(CodeSegment *, u4);
-Variable *gen_tmp(CodeSegment *);
+Variable *gen_glob(CodeList *cl, char *name, u4 mem);
+Variable *gen_local(CodeList *cl, u4 mem);
+Variable *gen_tmp(CodeList *cl);
 
 #endif

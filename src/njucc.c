@@ -9,10 +9,10 @@ Runtime rt;
 int main(int argc, char *argv[], char **envp) {
   const char HELP_MSG[] =
       "Usage: njucc [file]... [options]...\n"
-      "\t-a <file>  : Write abstract syntax tree into <file>.\n"
-      "\t-i <file>  : Write intermediate code into <file>.\n"
-      "\t-s <file>  : Write target assembly into <file>.\n"
-      "\t-d --debug : Show compiler debugging info.\n";
+      "\t-a <file>  : Write abstract syntax tree into <file>\n"
+      "\t-i <file>  : Write intermediate code into <file>\n"
+      "\t-s <file>  : Write target assembly into <file>\n"
+      "\t-d --debug : Show compiler debugging info\n";
 
   if (argc < 2)
     goto bad_usage;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[], char **envp) {
       else if (!strcmp(argv[argi], "-a"))
         arg_out = &rt.ast_out;
       else if (!strcmp(argv[argi], "-i"))
-        arg_out = &rt.ic_out;
+        arg_out = &rt.il_out;
       else if (!strcmp(argv[argi], "-s"))
         arg_out = &rt.asm_out;
       else
@@ -46,7 +46,7 @@ int main(int argc, char *argv[], char **envp) {
   }
 
   rt.err_flg = PASSED;
-  string_cache_init();
+  string_set_init();
 
   /* generate abstract syntax tree */
   ast_init(&rt.ast);
@@ -61,7 +61,7 @@ int main(int argc, char *argv[], char **envp) {
       ast_show(&rt.ast, rt.ast_out);
 
     symbol_table_init(&rt.symbols);
-    code_seg_init(&rt.codes);
+    code_list_init(&rt.il);
 
     /* parse abstract syntax tree */
     sdt_program(AST_ROOT(&rt.ast), &rt.symbols);
@@ -69,18 +69,18 @@ int main(int argc, char *argv[], char **envp) {
     if (rt.err_flg == PASSED) {
       /* show intermediate representation */
       if (rt.is_dbg)
-        code_seg_show(&rt.codes, stdout);
-      if (rt.ic_out)
-        code_seg_show(&rt.codes, rt.ic_out);
+        code_list_show(&rt.il, stdout);
+      if (rt.il_out)
+        code_list_show(&rt.il, rt.il_out);
     }
 
-    code_seg_free(&rt.codes);
+    code_list_free(&rt.il);
     symbol_table_free(&rt.symbols);
   }
 
   ast_free(&rt.ast);
 
-  string_cache_free();
+  string_set_free();
   return 0;
 
 bad_usage:
@@ -94,7 +94,7 @@ bad_file:
 
 ERROR(parse) {
   rt.err_flg |= PARSE_ERR;
-  printf("Parse error at line %d: %s.\n", where, msg);
+  printf("Parse error at line %d: %s\n", where, msg);
   fflush(stdout);
 }
 
@@ -108,7 +108,7 @@ ERROR(syntax) {
 
   if ((rt.err_flg & ~SYNTAX_ERR) == PASSED) {
     rt.err_flg |= SYNTAX_ERR;
-    printf("Syntax error at line %d: %s.\n", where, msg);
+    printf("Syntax error at line %d: %s\n", where, msg);
     fflush(stdout);
   }
 }
@@ -123,7 +123,7 @@ ERROR(semantic) {
 
   if ((rt.err_flg & ~SEMANTIC_ERR) == PASSED) {
     rt.err_flg |= SEMANTIC_ERR;
-    printf("Semantic error at line %d: %s.\n", where, msg);
+    printf("Semantic error at line %d: %s\n", where, msg);
     fflush(stdout);
   }
 }
