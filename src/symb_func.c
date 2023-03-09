@@ -9,18 +9,24 @@ SymbolFunc *new_symbol_func(char *name) {
   return func;
 }
 
-void new_param(char *func_name, char *param_name, SymbolType *param_type,
-               FieldList *paraml, FieldTable *paramt) {
-  char *spec_name = (char *)malloc(strlen(func_name) + strlen(param_name) + 2);
-  strcpy(spec_name, func_name);
-  strcat(spec_name, "$");
-  strcat(spec_name, param_name);
+char *_local2glob(char *sup, char *inf) {
+  u4 sup_len = strlen(sup), inf_len = strlen(inf);
+  char *tmp = (char *)malloc(sup_len + inf_len + 1);
 
-  SymbolField *param = new_symbol_field(param_type, new_string(spec_name));
-  field_list_add(paraml, param);
+  strcpy(tmp, sup);
+  strcpy(tmp + sup_len, "$");
+  strcpy(tmp + sup_len + 1, inf);
+
+  char *full = new_string(tmp);
+  free(tmp);
+  return full;
+}
+
+void new_param(SymbolFunc *func, SymbolField *formal, FieldTable *paramt) {
+  SymbolField *param =
+      new_symbol_field(formal->type, _local2glob(func->name, formal->name));
+  field_list_add(&func->paraml, param);
   field_table_add(paramt, param);
-
-  free(spec_name);
 }
 
 void func_table_add(FuncTable *ft, SymbolFunc *func) {

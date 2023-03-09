@@ -7,7 +7,7 @@ int yyparse();
 Runtime rt;
 
 int main(int argc, char *argv[], char **envp) {
-  const char help_msg[] =
+  const char HELP_MSG[] =
       "Usage: njucc [file]... [options]...\n"
       "\t-a <file>  : Write abstract syntax tree into <file>.\n"
       "\t-i <file>  : Write intermediate code into <file>.\n"
@@ -60,10 +60,21 @@ int main(int argc, char *argv[], char **envp) {
     if (rt.ast_out)
       ast_show(&rt.ast, rt.ast_out);
 
-    /* parse abstract syntax tree */
     symbol_table_init(&rt.symbols);
+    code_seg_init(&rt.codes);
+
+    /* parse abstract syntax tree */
     sdt_program(AST_ROOT(&rt.ast), &rt.symbols);
 
+    if (rt.err_flg == PASSED) {
+      /* show intermediate representation */
+      if (rt.is_dbg)
+        code_seg_show(&rt.codes, stdout);
+      if (rt.ic_out)
+        code_seg_show(&rt.codes, rt.ic_out);
+    }
+
+    code_seg_free(&rt.codes);
     symbol_table_free(&rt.symbols);
   }
 
@@ -73,7 +84,7 @@ int main(int argc, char *argv[], char **envp) {
   return 0;
 
 bad_usage:
-  printf("%s", help_msg);
+  printf("%s", HELP_MSG);
   return 1;
 
 bad_file:

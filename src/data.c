@@ -172,13 +172,9 @@ void hash_map_free(HashMap *hmap) {
 
 HashMap strings;
 
-void string_cache_init() {
-  hash_map_init(&strings, hash_elf, 4096);
-}
+void string_cache_init() { hash_map_init(&strings, hash_elf, LARGE_HSH_TBL); }
 
-void string_cache_free() {
-  hash_map_free(&strings);
-}
+void string_cache_free() { hash_map_free(&strings); }
 
 char *new_string(char *req) {
   char *str = (char *)hash_map_get(&strings, req);

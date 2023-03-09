@@ -17,6 +17,9 @@ typedef struct ArrayList {
   u4 size;
 } ArrayList;
 
+#define SHORT_ARR_LST 8
+#define LONG_ARR_LST 128
+
 void array_list_init(ArrayList *, u4);
 void _array_list_extend(ArrayList *);
 void array_list_push(ArrayList *, void *);
@@ -56,7 +59,7 @@ void linked_list_free(LinkedList *);
 
 #define linked_list_first(LNK_LST) ((LNK_LST)->head.next)
 #define linked_list_last(LNK_LST) ((LNK_LST)->tail)
-#define linked_list_empty(LNK_LST) ((LNK_LST)->tail == &(LNK_LST).head)
+#define linked_list_empty(LNK_LST) ((LNK_LST)->tail == &(LNK_LST)->head)
 
 typedef LinkedList LinkedStack;
 
@@ -99,6 +102,9 @@ typedef struct HashMap {
   u4 scale;
   u4 ctr;
 } HashMap;
+
+#define SMALL_HSH_TBL 512
+#define LARGE_HSH_TBL 4096
 
 void hash_map_init(HashMap *, Hash, u4);
 void _hash_map_extend(HashMap *);

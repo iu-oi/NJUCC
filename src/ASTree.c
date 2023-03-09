@@ -4,8 +4,8 @@
 
 void ast_init(ASTree *ast) {
   binary_tree_init(&ast->hierachy);
-  array_list_init(&ast->tokens, 128);
-  array_list_init(&ast->non_tokens, 128);
+  array_list_init(&ast->tokens, LONG_ARR_LST);
+  array_list_init(&ast->non_tokens, LONG_ARR_LST);
 }
 
 void ast_show(ASTree *ast, FILE *out) { _show_ast_node(AST_ROOT(ast), out, 0); }
@@ -60,28 +60,28 @@ ASTNode *new_non_token(ASTree *ast, u4 type, u4 ruleno, u4 lineno) {
 }
 
 void _show_token(ASTNode *node, FILE *out) {
-  const char *token_repr[] = {
+  const char *TOKEN_REPR[] = {
       "INT: %d", "SEMI", "COMMA", "RELOP: %s", "ASSIGNOP", "PLUS", "MINUS",
       "STAR",    "DIV",  "AND",   "OR",        "NOT",      "LP",   "RP",
       "LB",      "RB",   "LC",    "RC",        "RETURN",   "IF",   "ELSE",
       "WHILE",   "READ", "WRITE", "TYPE: %s",  "ID: %s"};
 
   if (node->type == TOK_INT)
-    fprintf(out, token_repr[0], strtol(TOKEN(node).text, NULL, 0));
+    fprintf(out, TOKEN_REPR[0], strtol(TOKEN(node).text, NULL, 0));
   else
-    fprintf(out, token_repr[node->type - TOK_INT], TOKEN(node).text);
+    fprintf(out, TOKEN_REPR[node->type - TOK_INT], TOKEN(node).text);
   fprintf(out, "\n");
   fflush(out);
 }
 
 void _show_non_token(ASTNode *node, FILE *out) {
-  const char *non_token_repr[] = {
+  const char *NON_TOKEN_REPR[] = {
       "Program (%d)", "ExtDefList (%d)", "ExtDef (%d)",   "DefList (%d)",
       "Def (%d)",     "DecList (%d)",    "Dec (%d)",      "FunDec (%d)",
       "VarList (%d)", "CompSt (%d)",     "StmtList (%d)", "Stmt (%d)",
       "Exp (%d)",     "Args (%d)"};
 
-  fprintf(out, non_token_repr[node->type - NON_TOK_PROGRAM],
+  fprintf(out, NON_TOKEN_REPR[node->type - NON_TOK_PROGRAM],
           NON_TOKEN(node).lineno);
   fprintf(out, "\n");
   fflush(out);

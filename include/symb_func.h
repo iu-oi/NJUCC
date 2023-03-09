@@ -9,7 +9,10 @@ typedef struct SymbolFunc {
 } SymbolFunc;
 
 SymbolFunc *new_symbol_func(char *);
-void new_param(char *, char *, SymbolType *, FieldList *, FieldTable *);
+
+char *_local2glob(char *, char *);
+
+void new_param(SymbolFunc *, SymbolField *, FieldTable *);
 
 typedef HashMap FuncTable;
 

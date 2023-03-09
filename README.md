@@ -24,9 +24,9 @@ See `NJUCC.md` and `example/` for more details.
 
 Optional arguments:
 
-- -a <file> Output AST into <file>.
-- -i <file> Output inter-code into <file>.
-- -s <file> Output assenbly into <file>.
+- -a \<file\> Output AST into \<file\>.
+- -i \<file\> Output inter-code into \<file\>.
+- -s \<file\> Output assenbly into \<file\>.
 - -d/--debug Show compiler debugging info.
 
 Debug inter-code:

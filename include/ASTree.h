@@ -21,6 +21,7 @@ typedef struct ASTNode {
     NON_TOK_STMTLIST,
     NON_TOK_STMT,
     NON_TOK_EXP,
+
     NON_TOK_ARGS,
     TOK_INT,
     TOK_SEMI,

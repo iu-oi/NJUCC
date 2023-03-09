@@ -1,54 +1,6 @@
 #include "ASTree_parse.h"
 #include "njucc.h"
-#include "stdlib.h"
-
-void begin_frame(FrameStack *locals) {
-  FieldTable *new_table = (FieldTable *)malloc(sizeof(FieldTable));
-  field_table_init(new_table, hash_elf, 4096);
-  frame_stack_push(locals, new_table);
-}
-
-void end_frame(FrameStack *locals) {
-  FieldTable *local_table = (FieldTable *)frame_stack_pop(locals);
-  field_table_free(local_table);
-  free(local_table);
-}
-
-FieldTable *current_frame(SymbolTable *table) {
-  if (frame_stack_empty(&table->locals))
-    return &table->globs;
-
-  return (FieldTable *)frame_stack_top(&table->locals);
-}
-
-void symbol_table_init(SymbolTable *table) {
-  type_tree_init(&table->types);
-  func_table_init(&table->funcs, hash_elf, 4096);
-
-  field_table_init(&table->globs, hash_elf, 4096);
-  frame_stack_init(&table->locals, 128);
-}
-
-void symbol_table_free(SymbolTable *table) {
-  type_tree_free(&table->types);
-  func_table_free(&table->funcs);
-
-  field_table_free(&table->globs);
-  frame_stack_free(&table->locals);
-}
-
-SymbolField *symbol_table_lookup(SymbolTable *table, char *name) {
-  u4 frame_no = table->locals.size;
-  SymbolField *match = NULL;
-
-  while (frame_no-- != 0) {
-    FieldTable *frame = frame_at(&table->locals, frame_no);
-    if ((match = field_table_lookup(frame, name)) != NULL)
-      return match;
-  }
-
-  return field_table_lookup(&table->globs, name);
-}
+#include <stdlib.h>
 
 void SDT(program)(SDT_PARAM) { sdt_ext_def_list(get_node(node, 1), table); }
 
@@ -125,8 +77,7 @@ void SDT(var_list)(SDT_PARAM, SymbolFunc *func) {
     free(new_field);
   } else {
     field_table_add(frame, new_field);
-    new_param(func->name, new_field->name, new_field->type, &func->paraml,
-              &table->globs);
+    new_param(func, new_field, &table->globs);
   }
 
   if (NON_TOKEN(node).ruleno == 2)
