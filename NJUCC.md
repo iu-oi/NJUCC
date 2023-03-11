@@ -118,3 +118,55 @@ $3$ *An identifier must not start with a digit.*
 - Args →
   - Exp
   - Exp COMMA Args
+
+## 中间语言 Intermediate Language
+
+- preprocessing:
+  - *func* **addr**:
+  - *glob* **addr** **imm**
+
+- 1 address code
+  - (ln) *param* **addr**
+  - (ln) *arg* **addr**
+  - (ln) *ret* **addr**
+  - (ln) *read* **addr**
+  - (ln) *write* **addr**
+  - (ln) *arg* **imm**
+  - (ln) *ret* **imm**
+  - (ln) *read* **imm**
+  - (ln) *write* **imm**
+  - (ln) *goto* (**imm**)
+
+- 2 address code
+  - (ln) **addr** = *call* **addr**
+  - (ln) **addr** = & **addr**
+  - (ln) **addr** = **addr**
+  - (ln) **addr** = \* **addr**
+  - (ln) \* **addr** = **addr**
+  - (ln) *local* **addr** **imm**
+  - (ln) **addr** = **imm**
+  - (ln) \* **addr** = **imm**
+
+- 3 address code
+  - (ln) **addr** = **addr** + **addr**
+  - (ln) **addr** = **addr** - **addr**
+  - (ln) **addr** = **addr** \* **addr**
+  - (ln) **addr** = **addr** / **addr**
+  - (ln) *if* **addr** == **addr** *goto* (ln)
+  - (ln) *if* **addr** != **addr** *goto* (ln)
+  - (ln) *if* **addr** >= **addr** *goto* (ln)
+  - (ln) *if* **addr** <= **addr** *goto* (ln)
+  - (ln) *if* **addr** > **addr** *goto* (ln)
+  - (ln) *if* **addr** < **addr** *goto* (ln)
+  - (ln) **addr** = **addr** + **imm**
+  - (ln) **addr** = **addr** - **imm**
+  - (ln) **addr** = **addr** \* **imm**
+  - (ln) **addr** = **addr** / **imm**
+  - (ln) *if* **addr** == **imm** *goto* (ln)
+  - (ln) *if* **addr** != **imm** *goto* (ln)
+  - (ln) *if* **addr** >= **imm** *goto* (ln)
+  - (ln) *if* **addr** <= **imm** *goto* (ln)
+  - (ln) *if* **addr** > **imm** *goto* (ln)
+  - (ln) *if* **addr** < **imm** *goto* (ln)
+  - (ln) **addr** = **imm** - **addr**
+  - (ln) **addr** = **imm** / **addr**

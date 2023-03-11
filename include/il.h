@@ -5,78 +5,80 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-typedef struct Variable {
+typedef struct Address {
   char *name;
   u4 mem;
-} Variable;
+} Address;
 
 typedef struct Code {
   LinkedStub stub;
   u4 lineno;
   enum {
     OP_FUNC,
-    OP_PARAM,
-    OP_ARG,
-    OP_RET,
-    OP_READ,
-    OP_WRITE,
+    OP_GLOB,
 
-    OP_ARGI,
-    OP_RETI,
-    OP_WRITEI,
+    OP_PARAM,
+    OP_ARG_V,
+    OP_RET_V,
+    OP_READ_V,
+    OP_WRITE_V,
+    OP_ARG_I,
+    OP_RET_I,
+    OP_READ_I,
+    OP_WRITE_I,
     OP_GOTO,
 
     OP_CALL,
-    OP_ASSIGN,
-    OP_ASSIGNA,
-    OP_ASSIGNM,
-    OP_MASSIGN,
-
-    OP_GLOB,
+    OP_MOV_VA,
+    OP_MOV_VV,
+    OP_MOV_VM,
+    OP_MOV_MV,
     OP_LOCAL,
-    OP_ASSIGNI,
+    OP_MOV_VI,
+    OP_MOV_MI,
 
-    OP_ADD,
-    OP_SUB,
-    OP_MUL,
-    OP_DIV,
-
-    OP_ADDI,
-    OP_SUBI,
-    OP_MULI,
-    OP_DIVI,
-
-    OP_ISUB,
-    OP_IDIV,
-
-    OP_EQ,
-    OP_NEQ,
-    OP_GE,
-    OP_LE,
-    OP_GTR,
-    OP_LESS,
-
-    OP_EQI,
-    OP_NEQI,
-    OP_GEI,
-    OP_LEI,
-    OP_GTRI,
-    OP_LESSI
+    OP_ADD_VV,
+    OP_SUB_VV,
+    OP_MUL_VV,
+    OP_DIV_VV,
+    OP_EQ_VV,
+    OP_NEQ_VV,
+    OP_GE_VV,
+    OP_LE_VV,
+    OP_GTR_VV,
+    OP_LESS_VV,
+    OP_ADD_VI,
+    OP_SUB_VI,
+    OP_MUL_VI,
+    OP_DIV_VI,
+    OP_EQ_VI,
+    OP_NEQ_VI,
+    OP_GE_VI,
+    OP_LE_VI,
+    OP_GTR_VI,
+    OP_LESS_VI,
+    OP_SUB_IV,
+    OP_DIV_IV
   } op;
-  Variable *dest;
   union {
-    u8 wild;
-    Variable *var;
+    Address *addr;
     u4 imm;
-  } src1, src2;
+  } arg[3];
 } Code;
+
+#define ADDR0(CODE) ((CODE)->arg[0].addr)
+#define ADDR1(CODE) ((CODE)->arg[1].addr)
+#define ADDR2(CODE) ((CODE)->arg[2].addr)
+#define IMM0(CODE) ((CODE)->arg[0].imm)
+#define IMM1(CODE) ((CODE)->arg[1].imm)
+#define IMM2(CODE) ((CODE)->arg[2].imm)
 
 Code *new_code(u4 op, ...);
 void _show_code(Code *code, FILE *out);
 
 typedef struct CodeList {
-  HashMap vars;
-  LinkedList list;
+  HashMap names;
+  LinkedList codes;
   u4 local_ctr;
   u4 tmp_ctr;
 } CodeList;
@@ -91,8 +93,8 @@ void code_list_append(CodeList *cl, Code *code);
 
 char *_num2name(char *fmt, u4 num);
 
-Variable *gen_glob(CodeList *cl, char *name, u4 mem);
-Variable *gen_local(CodeList *cl, u4 mem);
-Variable *gen_tmp(CodeList *cl);
+Address *gen_glob(CodeList *cl, char *name, u4 mem);
+Address *gen_local(CodeList *cl, u4 mem);
+Address *gen_tmp(CodeList *cl);
 
 #endif

@@ -10,8 +10,8 @@ int main(int argc, char *argv[], char **envp) {
   const char HELP_MSG[] =
       "Usage: njucc [file]... [options]...\n"
       "\t-a <file>  : Write abstract syntax tree into <file>\n"
-      "\t-i <file>  : Write intermediate code into <file>\n"
-      "\t-s <file>  : Write target assembly into <file>\n"
+      "\t-i <file>  : Write 3 addr code into <file>\n"
+      "\t-s <file>  : Write assembly into <file>\n"
       "\t-d --debug : Show compiler debugging info\n";
 
   if (argc < 2)

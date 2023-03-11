@@ -24,10 +24,10 @@ See `NJUCC.md` and `example/` for more details.
 
 Optional arguments:
 
-- -a \<file\> Output AST into \<file\>.
-- -i \<file\> Output inter-code into \<file\>.
-- -s \<file\> Output assenbly into \<file\>.
-- -d/--debug Show compiler debugging info.
+- -a \<file\> Write abstract syntax tree into \<file\>
+- -i \<file\> Write 3 addr code into \<file\>
+- -s \<file\> Write assembly into \<file\>
+- -d/--debug Show compiler debugging info
 
 Debug inter-code:
 
